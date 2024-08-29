@@ -1,22 +1,23 @@
 #include <iostream>
 #include <string>
 
-#define MAX_TAMANHO 101 // Tamanho máximo da linha + 1 para o '\0'
+#define MAX_TAMANHO 101 
 
 struct No {
     char caractere;
     No* prox;
 
     No() {
-        caractere = '\0'; // Inicializa com um valor padrão
+        caractere = '\0'; 
         prox = nullptr;
     }
 
     No(char _caractere) {
-        caractere = _caractere;
+        caractere = _caractere; // Corrigido aqui: atribui _caractere a caractere
         prox = nullptr;
     }
 };
+
 
 struct Pilha {
     No* topo;
