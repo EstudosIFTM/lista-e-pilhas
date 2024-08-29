@@ -7,46 +7,25 @@ struct No {
     char caractere;
     No* prox;
 
-    No() {
-        caractere = '\0'; 
-        prox = nullptr;
-    }
-
-    No(char _caractere) {
-        caractere = _caractere; // Corrigido aqui: atribui _caractere a caractere
-        prox = nullptr;
-    }
+    No() : caractere('\0'), prox(nullptr) {}
+    No(char _caractere) : caractere(_caractere), prox(nullptr) {}
 };
-
 
 struct Pilha {
     No* topo;
     int n;
 
-    Pilha() {
-        topo = nullptr;
-        n = 0;
-    }
+    Pilha() : topo(nullptr), n(0) {}
 
     void inserir(char valor) {
         No* novo = new No(valor);
-        if (topo == nullptr) {
-            topo = novo;
-        } else {
-            novo->prox = topo;
-            topo = novo;
-        }
+        novo->prox = topo;
+        topo = novo;
         n++;
     }
 
     void remover() {
         if (n == 0) return;
-        if (n == 1) {
-            delete topo;
-            topo = nullptr;
-            n = 0;
-            return;
-        }
         No* aux = topo;
         topo = topo->prox;
         delete aux;
@@ -61,7 +40,7 @@ struct Pilha {
     void imprimir() {
         No* aux = topo; 
         while (aux != nullptr) {
-            std::cout << aux->valor << std::endl;
+            std::cout << aux->caractere << std::endl; // Corrigido para usar 'caractere'
             aux = aux->prox;
         }
     }
