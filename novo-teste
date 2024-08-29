@@ -1,0 +1,107 @@
+#include <iostream>
+#include <string>
+
+#define MAX_TAMANHO 101 // Tamanho máximo da linha + 1 para o '\0'
+
+struct No {
+    char caractere;
+    No* prox;
+
+    No() {
+        caractere = '\0'; // Inicializa com um valor padrão
+        prox = nullptr;
+    }
+
+    No(char _caractere) {
+        caractere = _caractere;
+        prox = nullptr;
+    }
+};
+
+struct Pilha {
+    No* topo;
+    int n;
+
+    Pilha() {
+        topo = nullptr;
+        n = 0;
+    }
+
+    void inserir(char valor) {
+        No* novo = new No(valor);
+        if (topo == nullptr) {
+            topo = novo;
+        } else {
+            novo->prox = topo;
+            topo = novo;
+        }
+        n++;
+    }
+
+    void remover() {
+        if (n == 0) return;
+        if (n == 1) {
+            delete topo;
+            topo = nullptr;
+            n = 0;
+            return;
+        }
+        No* aux = topo;
+        topo = topo->prox;
+        delete aux;
+        n--;
+    }
+
+    char topoPilha() {
+        if (topo == nullptr) return '\0'; // Retorna um valor padrão se a pilha estiver vazia
+        return topo->caractere;
+    }
+
+    void imprimir() {
+        No* aux = topo; 
+        while (aux != nullptr) {
+            std::cout << aux->valor << std::endl;
+            aux = aux->prox;
+        }
+    }
+};
+
+int main() {
+    std::string linha;
+    int numeroLinha = 1;
+    Pilha pilha;
+
+    while (std::getline(std::cin, linha)) {
+        if (linha == "***END***") {
+            break; 
+        }
+
+        for (char c : linha) {
+            if (c == '(' || c == '{') {
+                pilha.inserir(c);
+            } else if (c == ')' || c == '}') {
+                if (pilha.n == 0) {
+                    std::cout << numeroLinha << std::endl; 
+                    return 0;
+                } else {
+                    char caractereAbertura = pilha.topoPilha();
+                    pilha.remover();
+                    if ((c == ')' && caractereAbertura != '(') || 
+                        (c == '}' && caractereAbertura != '{')) {
+                        std::cout << numeroLinha << std::endl;
+                        return 0;
+                    }
+                }
+            }
+        }
+        numeroLinha++;
+    }
+
+    if (pilha.n == 0) {
+        std::cout << "OK" << std::endl;
+    } else {
+        std::cout << numeroLinha - 1 << std::endl; 
+    }
+
+    return 0;
+}
