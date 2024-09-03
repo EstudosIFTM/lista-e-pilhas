@@ -1,0 +1,91 @@
+#include <stdio.h>
+#include <string.h>
+
+struct No {
+    char valor;
+    No *prox;
+
+    No(char _valor) {
+        valor = _valor;
+        prox = NULL;
+    }
+};
+
+struct Pilha {
+    No *topo;
+    int n;
+
+    Pilha() {
+        topo = NULL;
+        n = 0;
+    }
+
+    void inserir(char valor) {
+        No *novo = new No(valor);
+        if (topo == NULL) {
+            topo = novo;
+        } else {
+            novo->prox = topo;
+            topo = novo;
+        }
+        n++;
+    }
+
+    void remover() {
+        if (n == 0)
+            return;
+        No *aux = topo;
+        topo = topo->prox;
+        delete (aux);
+        n--;
+    }
+
+    char topoPilha() {
+        if (topo == NULL)
+            return 0;
+        return topo->valor;
+    }
+
+    int vazio() {
+        return n == 0;
+    }
+};
+
+int main() {
+    Pilha p;
+    char linha[101];
+    int numLinha = 0;
+    int erro = 0;
+
+    while (scanf(" %[^\n]", linha) != EOF) {
+        if (strcmp(linha, "***END***") == 0)
+            break;
+
+        numLinha++;
+        for (int i = 0; linha[i] != '\0'; i++) {
+            if (linha[i] == '(' || linha[i] == '{') {
+                p.inserir(linha[i]);
+            } else if (linha[i] == ')' || linha[i] == '}') {
+                if (p.vazio() || (linha[i] == ')' && p.topoPilha() != '(') || (linha[i] == '}' && p.topoPilha() != '{')) {
+                    printf("%d\n", numLinha);
+                    erro = 1;
+                    break;
+                } else {
+                    p.remover();
+                }
+            }
+        }
+        if (erro)
+            break;
+    }
+
+    if (!erro) {
+        if (p.vazio()) {
+            printf("OK\n");
+        } else {
+            printf("%d\n", numLinha);
+        }
+    }
+
+    return 0;
+}
